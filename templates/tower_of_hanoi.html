@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tower of Hanoi</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background: linear-gradient(to bottom, #deac97, hsl(16, 83%, 48%));
+            font-family: Arial, sans-serif;
+            color: #0f1514;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        .tower-container {
+            display: flex;
+            justify-content: space-between;
+            width: 60%;
+        }
+
+        .tower {
+            width: 100px;
+            height: 300px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            position: relative;
+            margin: 0 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            transition: background 0.3s;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .tower:hover {
+            background: rgba(181, 161, 161, 0.9);
+        }
+
+        .disk {
+            height: 30px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .disk:hover {
+            transform: scale(1.1);
+        }
+
+        #inputSection {
+            margin-bottom: 20px;
+        }
+
+        input {
+            margin: 5px;
+            padding: 5px;
+            border-radius: 5px;
+            border: none;
+            width: 200px;
+        }
+
+        button {
+            padding: 5px 10px;
+            border-radius: 5px;
+            border: none;
+            background-color: #0f1514;
+            color: white;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background-color: #0bdbee;
+        }
+
+        #moveCounter {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Tower of Hanoi</h1>
+    <div id="playerName">Player: <span id="name"></span></div>
+    <div id="inputSection">
+        <label for="player-input">Enter Your Name:</label>
+        <input type="text" id="player-input" placeholder="Your Name">
+        <label for="numDisks">Number of Disks (3-10):</label>
+        <input type="number" id="numDisks" min="3" max="10" value="3">
+        <button id="startGame">Start Game</button>
+    </div>
+    <div class="tower-container">
+        <div class="tower" id="towerA" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+        <div class="tower" id="towerB" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+        <div class="tower" id="towerC" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+    </div>
+    <div id="moveCounter">Moves Made: <span id="moveCount">0</span></div>
+
+    <script>
+        const towers = { A: [], B: [], C: [] };
+        let moveCount = 0;
+        let maxMoves = null;
+
+        document.getElementById("startGame").onclick = function () {
+            const playerName = document.getElementById("player-input").value;
+            const numDisks = parseInt(document.getElementById("numDisks").value);
+            maxMoves = Math.pow(2, numDisks) - 1;  // Calculate maximum moves for optimal solution  
+
+            // Set player name display  
+            document.getElementById("name").textContent = playerName;
+
+            // Clear previous game state  
+            resetGame();
+
+            for (let i = numDisks; i > 0; i--) {
+                const disk = createDisk(i);
+                document.getElementById("towerA").appendChild(disk);
+                towers.A.push(disk);
+            }
+        };
+
+        function createDisk(size) {
+            const disk = document.createElement("div");
+            disk.className = "disk";
+            disk.style.width = `${size * 30}px`;
+            disk.style.backgroundColor = `hsl(${size * 60}, 100%, 50%)`;
+            disk.draggable = true;
+            disk.dataset.size = size;
+            disk.ondragstart = drag;
+            return disk;
+        }
+
+        function resetGame() {
+            towers.A = [];
+            towers.B = [];
+            towers.C = [];
+            moveCount = 0;
+            document.getElementById("moveCount").textContent = moveCount;
+
+            // Clear towers  
+            document.getElementById("towerA").innerHTML = '';
+            document.getElementById("towerB").innerHTML = '';
+            document.getElementById("towerC").innerHTML = '';
+        }
+
+        function allowDrop(event) {
+            event.preventDefault();
+        }
+
+        function drag(event) {
+            event.dataTransfer.setData("text/plain", event.target.dataset.size);
+        }
+
+        function drop(event) {
+            event.preventDefault();
+            const diskSize = event.dataTransfer.getData("text/plain");
+            const targetTower = event.currentTarget.id;
+
+            const disk = document.querySelector(`.disk[data-size='${diskSize}']`);
+            const startTower = getTowerFromDisk(disk);
+
+            if (isValidMove(startTower, targetTower, diskSize)) {
+                event.currentTarget.appendChild(disk);
+                towers[targetTower].push(disk);
+                towers[startTower] = towers[startTower].filter(d => d.dataset.size !== diskSize);
+                moveCount++;
+                updateMoveCounter();
+                alert("Correct move!");  // Alert message for a valid move  
+            } else {
+                alert("Invalid move! A smaller disk cannot be placed on a larger disk."); // Alert message for an invalid move  
+            }
+
+            // Check for maximum moves  
+            if (moveCount >= maxMoves) {
+                alert("You've reached the maximum number of moves!");
+            }
+        }
+
+        function isValidMove(startTower, targetTower, diskSize) {
+            return (
+                towers[targetTower].length === 0 ||
+                towers[targetTower][towers[targetTower].length - 1].dataset.size > diskSize
+            );
+        }
+
+        function getTowerFromDisk(disk) {
+            return Object.keys(towers).find(tower => towers[tower].includes(disk));
+        }
+
+        function updateMoveCounter() {
+            document.getElementById("moveCount").text
