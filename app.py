@@ -37,7 +37,7 @@ def save_game_data(player_name, num_disks, time_taken, moves):
     conn = sqlite3.connect('hanoi.db')
     c = conn.cursor()
 
-    # Insert the game data into the table, including the new 'moves' column
+    
     c.execute("INSERT INTO games (player_name, num_disks, time_taken, moves) VALUES (?, ?, ?, ?)", 
               (player_name, num_disks, time_taken, moves))
 
@@ -51,7 +51,7 @@ class TowerOfHanoiApp:
         self.master = master  
         self.master.title("Tower of Hanoi")  
         self.master.geometry("800x600")  
-        self.master.configure(bg="#e0f7fa")  # Light cyan background  
+        self.master.configure(bg="#e0f7fa")   
         create_database()  
         self.start_game()  
 
@@ -95,11 +95,11 @@ class TowerOfHanoiApp:
 
         # Disks  
         self.disk_labels = {}  
-        # Remove the disk_colors array   
+   
         for i in range(self.num_disks):  
             disk_size = i + 1  
             disk_label = ttk.Label(self.peg_frames[0], text=str(disk_size), font=("Arial", 16, "bold"),  
-                                   background=f"#{i+1:02x}{i+1:02x}{i+1:02x}",  # Example: Use dynamic color for each disk  
+                                   background=f"#{i+1:02x}{i+1:02x}{i+1:02x}",   
                                    foreground="white", padding=5)  
             disk_label.place(x=50 - i * 10, y=350 - i * 30)  
             disk_label.bind("<Button-1>", self.start_drag)  
