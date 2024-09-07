@@ -28,7 +28,7 @@ class TowerOfHanoiApp:
         self.master = master  
         self.master.title("Tower of Hanoi")  
         self.master.geometry("800x600")  
-        self.master.configure(bg="#e0f7fa")  # Light cyan background  
+        self.master.configure(bg="#e0f7fa") 
         create_database()  
         self.start_game()  
 
@@ -147,5 +147,8 @@ if __name__ == "__main__":
     root = tk.Tk()  
     app = TowerOfHanoiApp(root)  
     root.mainloop()
+<<<<<<< HEAD
 
     
+=======
+>>>>>>> origin/master
