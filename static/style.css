@@ -1,0 +1,36 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-color: #f4f4f4;
+}
+
+#game-container {
+    display: flex;
+    justify-content: space-around;
+    margin: 20px auto;
+    width: 80%;
+    height: 300px;
+    align-items: flex-end;
+    background-color: #e0e0e0;
+    border: 2px solid #ccc;
+    padding: 10px;
+}
+
+.peg {
+    width: 20%;
+    height: 250px;
+    background-color: #bbb;
+    border: 2px solid #000;
+    position: relative;
+    margin-top: 10px;
+}
+
+.disk {
+    height: 30px;
+    background-color: blue;
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 2px solid #000;
+}

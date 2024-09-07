@@ -1,15 +1,13 @@
 import sqlite3
-import time
 from flask import Flask, request, jsonify
 
 app = Flask(__name__)
 
-
 def create_database():
     conn = sqlite3.connect('hanoi.db')
     c = conn.cursor()
-    c.execute('''CREATE TABLE IF NOT EXISTS games
-                 (id INTEGER PRIMARY KEY,
+    c.execute('''CREATE TABLE IF NOT EXISTS games (
+                  id INTEGER PRIMARY KEY,
                   player_name TEXT,
                   num_disks INTEGER,
                   moves INTEGER,
@@ -17,7 +15,6 @@ def create_database():
     conn.commit()
     conn.close()
 
-# Save game data to the database
 def save_game_data(player_name, num_disks, moves, time_taken):
     conn = sqlite3.connect('hanoi.db')
     c = conn.cursor()
@@ -26,7 +23,6 @@ def save_game_data(player_name, num_disks, moves, time_taken):
     conn.commit()
     conn.close()
 
-# API route to save game data
 @app.route('/save_game', methods=['POST'])
 def save_game():
     data = request.get_json()
@@ -37,7 +33,6 @@ def save_game():
     save_game_data(player_name, num_disks, moves, time_taken)
     return jsonify({"status": "success"})
 
-# Initialize the database
 create_database()
 
 if __name__ == '__main__':
