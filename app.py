@@ -5,17 +5,56 @@ from flask import Flask, render_template
 
 app = Flask(__name__)  
 
+<<<<<<< HEAD
 @app.route('/')  
 def home():  
     return render_template('tower_of_hanoi.html')  
+=======
+def next_move(self, from_peg, to_peg):  
+    if not self.pegs[to_peg] or self.pegs[to_peg][-1] > self.pegs[from_peg][-1]:  
+        disk = self.pegs[from_peg].pop()  
+        self.pegs[to_peg].append(disk)  
+        self.moves += 1  
+        self.update_disk_positions()  
+        if len(self.pegs['C']) == self.num_disks:  
+            end_time = time.time()  
+            time_taken = end_time - self.start_time  
+            self.save_game_data(self.player_name, self.num_disks, self.moves, time_taken)  
+            messagebox.showinfo("Game Over", f"Congratulations, {self.player_name}! You completed the game in {time_taken:.2f} seconds.")  
+            self.master.destroy()  
+    else:  
+        messagebox.showerror("Invalid Move", "Cannot move a larger disk onto a smaller disk.")  
+
+import sqlite3
+
+def save_game_data(player_name, num_disks, time_taken, moves):
+    conn = sqlite3.connect('hanoi.db')
+    c = conn.cursor()
+
+    
+    c.execute("INSERT INTO games (player_name, num_disks, time_taken, moves) VALUES (?, ?, ?, ?)", 
+              (player_name, num_disks, time_taken, moves))
+
+    conn.commit()
+    conn.close()
+
+  
+>>>>>>> origin/master
 
 if __name__ == '__main__':  
     app.run(debug=True)
 class TowerOfHanoiApp:  
     def __init__(self, master):  
         self.master = master  
+<<<<<<< HEAD
         self.master.configure(bg="#e0f7fa")  # Light cyan background  
         self.create_database()  
+=======
+        self.master.title("Tower of Hanoi")  
+        self.master.geometry("800x600")  
+        self.master.configure(bg="#e0f7fa")   
+        create_database()  
+>>>>>>> origin/master
         self.start_game()  
 
     def create_database(self):  
@@ -54,7 +93,23 @@ class TowerOfHanoiApp:
             peg_label = tk.Label(peg_frame, text=peg, font=("Arial", 16, "bold"), bg="#e0f7fa")  
             peg_label.pack(side=tk.TOP)  
 
+<<<<<<< HEAD
         self.update_disk_positions()  
+=======
+        # Disks  
+        self.disk_labels = {}  
+   
+        for i in range(self.num_disks):  
+            disk_size = i + 1  
+            disk_label = ttk.Label(self.peg_frames[0], text=str(disk_size), font=("Arial", 16, "bold"),  
+                                   background=f"#{i+1:02x}{i+1:02x}{i+1:02x}",   
+                                   foreground="white", padding=5)  
+            disk_label.place(x=50 - i * 10, y=350 - i * 30)  
+            disk_label.bind("<Button-1>", self.start_drag)  
+            disk_label.bind("<B1-Motion>", self.on_drag)  
+            disk_label.bind("<ButtonRelease-1>", self.stop_drag)  
+            self.disk_labels[disk_size] = disk_label  
+>>>>>>> origin/master
 
     def update_disk_positions(self):  
         for peg, disks in self.pegs.items():  
@@ -128,4 +183,8 @@ class TowerOfHanoiApp:
 if __name__ == "__main__":  
     root = tk.Tk()  
     app = TowerOfHanoiApp(root)  
+<<<<<<< HEAD
     root.mainloop()
+=======
+    root.mainloop() 
+>>>>>>> origin/master
